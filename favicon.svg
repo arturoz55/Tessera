@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Tessera, reduced for the size a favicon is actually seen at. The full
+       mark's gradients and hairlines turn to mud by 16px, so this keeps flat
+       fills and the four shapes that still read: the lifted tile, the socket
+       rim, its two faces, and the opening between them.
+       The plate is drawn rather than left transparent, so the mark holds its
+       contrast against a light and a dark browser chrome alike. -->
+  <rect width="32" height="32" rx="7" fill="#08080b"/>
+  <path d="M16 4 L24.5 8 L16 12 L7.5 8 Z" fill="#ffffff"/>
+  <path d="M6 19 L16 24 L16 28 L6 23 Z" fill="#c2c2ca"/>
+  <path d="M26 19 L16 24 L16 28 L26 23 Z" fill="#6e6e78"/>
+  <path d="M16 14 L26 19 L16 24 L6 19 Z" fill="#9a9aa4"/>
+  <path d="M16 16.6 L21 19 L16 21.4 L11 19 Z" fill="#08080b"/>
+</svg>
