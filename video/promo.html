@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tessera — promo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=block">
+<style>
+  :root {
+    --paper:#08080b; --ink:#f5f5f7; --ink-2:#9b9ba6; --ink-3:#5f5f69;
+    --hair:rgba(245,245,247,.10);
+    --display:"Bricolage Grotesque", Helvetica, Arial, sans-serif;
+    --body:"Instrument Sans", Helvetica, Arial, sans-serif;
+    --mono:"JetBrains Mono", ui-monospace, monospace;
+  }
+  * { margin:0; box-sizing:border-box; }
+  body {
+    width:1080px; height:1080px; background:var(--paper); color:var(--ink);
+    font-family:var(--body); overflow:hidden; position:relative;
+  }
+  .frame { position:absolute; inset:0; pointer-events:none; z-index:6; }
+  .scene { position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding:0 110px; }
+  .inner { display:flex; flex-direction:column; align-items:center; gap:26px; width:100%; }
+
+  .word { font-family:var(--display); font-weight:800; font-size:128px; letter-spacing:-0.046em; line-height:1; }
+  .sub { font-family:var(--mono); font-size:19px; letter-spacing:.44em; text-indent:.44em; color:var(--ink-2); }
+  .kicker { font-family:var(--mono); font-size:16px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-3); }
+  .line { font-family:var(--display); font-weight:700; font-size:74px; line-height:1.1; letter-spacing:-0.034em; }
+  .line em { font-style:normal; color:var(--ink-3); }
+  .note { font-size:27px; color:var(--ink-2); line-height:1.45; max-width:19ch; }
+
+  .rows { display:flex; flex-direction:column; gap:22px; width:100%; max-width:720px; }
+  .row {
+    display:flex; align-items:center; gap:22px; text-align:left;
+    border:1px solid rgba(245,245,247,.13); border-radius:18px; padding:26px 30px;
+    background:rgba(245,245,247,.025);
+  }
+  .row .n { font-family:var(--mono); font-size:15px; color:var(--ink-3); flex:none; width:26px; }
+  .row .t { font-family:var(--display); font-weight:600; font-size:31px; letter-spacing:-0.02em; }
+  .row .d { font-size:20px; color:var(--ink-2); margin-top:3px; }
+
+  .board { display:grid; grid-template-columns:repeat(5,1fr); gap:18px; width:520px; height:520px; }
+  .tile { border-radius:13px; background:#1a1a21; }
+
+  .sale { font-family:var(--mono); font-size:30px; letter-spacing:.14em; color:var(--ink); }
+  .meta { font-family:var(--mono); font-size:19px; letter-spacing:.2em; color:var(--ink-3); }
+  .risk { font-family:var(--mono); font-size:14px; letter-spacing:.1em; color:var(--ink-3); max-width:46ch; line-height:1.7; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gTile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c8c8d0"/>
+    </linearGradient>
+    <linearGradient id="gLeft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c2c2ca"/><stop offset="1" stop-color="#6e6e78"/>
+    </linearGradient>
+    <linearGradient id="gRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#75757f"/><stop offset="1" stop-color="#37373f"/>
+    </linearGradient>
+    <linearGradient id="gRim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a6a6b0"/><stop offset="1" stop-color="#5a5a64"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<canvas class="frame" id="plate" width="1080" height="1080"></canvas>
+
+<!-- 1 — the mark seats itself, then the wordmark -->
+<div class="scene" id="s1">
+  <div class="inner">
+    <svg id="mark" width="300" height="300" viewBox="0 0 100 100">
+      <g id="lid"><path d="M50 4 L78 20 L50 36 L22 20 Z" fill="url(#gTile)"/></g>
+      <path d="M20 55 L50 72 L50 90 L20 73 Z" fill="url(#gLeft)"/>
+      <path d="M80 55 L50 72 L50 90 L80 73 Z" fill="url(#gRight)"/>
+      <path d="M50 38 L80 55 L50 72 L20 55 Z" fill="url(#gRim)"/>
+      <path d="M50 46 L68 56 L50 66 L32 56 Z" fill="#08080b"/>
+    </svg>
+    <div class="word" id="s1word">Tessera</div>
+    <div class="sub" id="s1sub">PERPETUAL PLAYTEST</div>
+  </div>
+</div>
+
+<!-- 2 — the thesis -->
+<div class="scene" id="s2">
+  <div class="inner">
+    <div class="kicker">The studio</div>
+    <div class="line">Indie games,<br><em>shaped by the people</em><br>who hold them.</div>
+  </div>
+</div>
+
+<!-- 3 — what holding does -->
+<div class="scene" id="s3">
+  <div class="inner">
+    <div class="kicker">What $tessera opens</div>
+    <div class="rows">
+      <div class="row" id="r1"><span class="n">01</span><div><div class="t">Playtest access</div><div class="d">Play the build while it is still being made.</div></div></div>
+      <div class="row" id="r2"><span class="n">02</span><div><div class="t">Reviews that count</div><div class="d">Holder scores decide what gets built next.</div></div></div>
+      <div class="row" id="r3"><span class="n">03</span><div><div class="t">Every release free</div><div class="d">One bag, the whole catalogue.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 — the mosaic fills -->
+<div class="scene" id="s4">
+  <div class="inner">
+    <div class="kicker">One piece at a time</div>
+    <div class="board" id="board"></div>
+  </div>
+</div>
+
+<!-- 5 — the card -->
+<div class="scene" id="s5">
+  <div class="inner">
+    <svg width="130" height="130" viewBox="0 0 100 100">
+      <path d="M50 4 L78 20 L50 36 L22 20 Z" fill="url(#gTile)"/>
+      <path d="M20 55 L50 72 L50 90 L20 73 Z" fill="url(#gLeft)"/>
+      <path d="M80 55 L50 72 L50 90 L80 73 Z" fill="url(#gRight)"/>
+      <path d="M50 38 L80 55 L50 72 L20 55 Z" fill="url(#gRim)"/>
+      <path d="M50 46 L68 56 L50 66 L32 56 Z" fill="#08080b"/>
+    </svg>
+    <div class="sale">$tessera</div>
+    <div class="meta">ROBINHOOD CHAIN &nbsp;&middot;&nbsp; CHAIN ID 4663</div>
+    <div class="meta" style="color:var(--ink-2)">@Trytessera</div>
+    <div class="risk">A community access token for Tessera games. Not an investment product. Nothing here is financial advice.</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* Every element is positioned from t, so frames are captured deterministically
+   rather than screen-recorded: no dropped frames, no timing drift. */
+
+var ease = function (x) { return x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3); };
+var clamp01 = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+
+var SCENES = [
+  { el: 's1', a: 0,     b: 3200 },
+  { el: 's2', a: 3200,  b: 6600 },
+  { el: 's3', a: 6600,  b: 10400 },
+  { el: 's4', a: 10400, b: 12700 },
+  { el: 's5', a: 12700, b: 15000 }
+];
+var FADE = 420;
+
+/* the mosaic, lit in a fixed order so the fill is identical every render */
+var ORDER = [12, 7, 17, 11, 13, 6, 8, 16, 18, 2, 10, 14, 22, 1, 5, 19, 23, 0, 4, 20, 24, 3, 9, 15, 21];
+var board = document.getElementById('board');
+var tiles = [];
+for (var i = 0; i < 25; i++) {
+  var t = document.createElement('span');
+  t.className = 'tile';
+  board.appendChild(t);
+  tiles.push(t);
+}
+
+/* a quiet isometric hairline texture, drawn once per frame */
+var pc = document.getElementById('plate').getContext('2d');
+var RULES = [
+  [90, 980, 300, 760, 510, 980], [700, 210, 900, 40], [140, 120, 340, 300],
+  [620, 1040, 820, 860, 1010, 1040], [980, 620, 1060, 700]
+];
+function plate(t) {
+  pc.clearRect(0, 0, 1080, 1080);
+  pc.strokeStyle = 'rgba(245,245,247,.085)';
+  pc.lineWidth = 1.6;
+  var drift = Math.sin(t / 2600) * 5;
+  for (var i = 0; i < RULES.length; i++) {
+    var r = RULES[i];
+    pc.beginPath();
+    pc.moveTo(r[0], r[1] + drift);
+    for (var j = 2; j < r.length; j += 2) pc.lineTo(r[j], r[j + 1] + drift);
+    pc.stroke();
+  }
+  pc.fillStyle = 'rgba(245,245,247,.16)';
+  for (var x = 0; x < 1080; x += 15) { pc.fillRect(x, 0, 1, 9); pc.fillRect(x, 1071, 1, 9); }
+  for (var y = 0; y < 1080; y += 15) { pc.fillRect(0, y, 9, 1); pc.fillRect(1071, y, 9, 1); }
+}
+
+window.setT = function (t) {
+  plate(t);
+
+  for (var i = 0; i < SCENES.length; i++) {
+    var s = SCENES[i];
+    var el = document.getElementById(s.el);
+    var inA = clamp01((t - s.a) / FADE);
+    var outA = clamp01((s.b - t) / FADE);
+    var vis = Math.min(ease(inA), ease(outA));
+    el.style.opacity = vis;
+    el.style.transform = 'translateY(' + ((1 - ease(inA)) * 26 - (1 - ease(outA)) * 14) + 'px)';
+  }
+
+  /* 1 — the lid rises clear of the socket and settles */
+  var lu = clamp01((t - 250) / 1500);
+  var lid = document.getElementById('lid');
+  lid.setAttribute('transform', 'translate(0 ' + ((1 - ease(lu)) * 13) + ')');
+  var mk = clamp01((t - 120) / 900);
+  document.getElementById('mark').style.transform = 'scale(' + (0.9 + ease(mk) * 0.1) + ')';
+  var wu = clamp01((t - 1150) / 900);
+  document.getElementById('s1word').style.opacity = ease(wu);
+  document.getElementById('s1word').style.transform = 'translateY(' + (1 - ease(wu)) * 20 + 'px)';
+  var su = clamp01((t - 1550) / 800);
+  document.getElementById('s1sub').style.opacity = ease(su) * 0.95;
+
+  /* 3 — the rows arrive one after another */
+  for (var k = 0; k < 3; k++) {
+    var ru = clamp01((t - (6900 + k * 430)) / 620);
+    var row = document.getElementById('r' + (k + 1));
+    row.style.opacity = ease(ru);
+    row.style.transform = 'translateX(' + (1 - ease(ru)) * -22 + 'px)';
+  }
+
+  /* 4 — the mosaic fills, one tessera at a time */
+  var fill = clamp01((t - 10650) / 1500);
+  var lit = Math.round(ease(fill) * ORDER.length);
+  for (var m = 0; m < tiles.length; m++) tiles[m].style.background = '#1a1a21';
+  for (var n = 0; n < lit; n++) tiles[ORDER[n]].style.background = '#f5f5f7';
+};
+
+window.setT(0);
+</script>
+</body>
+</html>
