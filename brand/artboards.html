@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tessera — brand artboards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=block">
+<style>
+  :root {
+    --paper:#08080b; --ink:#f5f5f7; --ink-2:#9b9ba6; --hair:rgba(245,245,247,.13);
+  }
+  * { box-sizing:border-box; margin:0; }
+  body {
+    background:#3a3a3a; padding:40px; display:flex; flex-direction:column;
+    gap:40px; align-items:flex-start;
+    font-family:"Bricolage Grotesque", Helvetica, Arial, sans-serif;
+  }
+  .art { position:relative; overflow:hidden; background:var(--paper); }
+  .banner { width:1500px; height:500px; display:grid; place-items:center; }
+  .avatar { width:400px; height:400px; display:grid; place-items:center; }
+
+  /* the lockup */
+  .lock { display:flex; align-items:center; gap:30px; position:relative; z-index:3; }
+  .word {
+    font-weight:800; font-size:104px; letter-spacing:-0.045em; color:var(--ink);
+    line-height:1;
+  }
+  .banner.tight .word { font-size:112px; }
+
+  /* decorative tesserae at the edges */
+  .deco { position:absolute; z-index:1; opacity:.9; }
+  .deco.l { left:-90px; top:-40px; }
+  .deco.r { right:-120px; top:20px; }
+  .deco.m1 { left:512px; top:74px; }
+  .deco.m2 { left:1000px; top:292px; }
+  .rule { position:absolute; z-index:2; stroke:var(--hair); fill:none; }
+  .ring { position:absolute; inset:22px; border-radius:50%; border:1.5px solid rgba(245,245,247,.42); z-index:2; }
+  .caption { color:#ddd; font-size:13px; font-family:ui-monospace, monospace; }
+</style>
+</head>
+<body>
+
+<!-- reusable mark: a tessera lifted clear of its socket -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gTile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c8c8d0"/>
+    </linearGradient>
+    <linearGradient id="gLeft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c2c2ca"/><stop offset="1" stop-color="#6e6e78"/>
+    </linearGradient>
+    <linearGradient id="gRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#75757f"/><stop offset="1" stop-color="#37373f"/>
+    </linearGradient>
+    <linearGradient id="gRim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a6a6b0"/><stop offset="1" stop-color="#5a5a64"/>
+    </linearGradient>
+    <g id="mark">
+      <path d="M50 4 L78 20 L50 36 L22 20 Z" fill="url(#gTile)"/>
+      <path d="M20 55 L50 72 L50 90 L20 73 Z" fill="url(#gLeft)"/>
+      <path d="M80 55 L50 72 L50 90 L80 73 Z" fill="url(#gRight)"/>
+      <path d="M50 38 L80 55 L50 72 L20 55 Z" fill="url(#gRim)"/>
+      <path d="M50 46 L68 56 L50 66 L32 56 Z" fill="#08080b"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- BANNER — texture only. No mark, no wordmark: on X the profile picture and
+     the account name are drawn over this, so the header carries neither. -->
+<span class="caption">#banner — 1500x500</span>
+<div class="art banner" id="banner">
+  <svg class="rule" width="1500" height="500" viewBox="0 0 1500 500">
+    <path d="M60 470 L250 300 L440 470"/>
+    <path d="M1180 250 L1370 80 L1470 170"/>
+    <path d="M150 40 L330 190"/>
+    <path d="M560 470 L760 300 L960 470"/>
+    <path d="M900 120 L1010 30"/>
+  </svg>
+  <svg class="deco l" width="430" height="430" viewBox="0 0 100 100" opacity=".55"><use href="#mark"/></svg>
+  <svg class="deco r" width="380" height="380" viewBox="0 0 100 100" opacity=".32"><use href="#mark"/></svg>
+  <svg class="deco m1" width="140" height="140" viewBox="0 0 100 100" opacity=".17"><use href="#mark"/></svg>
+  <svg class="deco m2" width="96"  height="96"  viewBox="0 0 100 100" opacity=".12"><use href="#mark"/></svg>
+</div>
+
+<!-- BANNER — with the mark, in case the lockup is wanted -->
+<span class="caption">#banner-lockup — 1500x500</span>
+<div class="art banner" id="banner-lockup">
+  <svg class="rule" width="1500" height="500" viewBox="0 0 1500 500">
+    <path d="M60 470 L250 300 L440 470"/>
+    <path d="M1180 250 L1370 80 L1470 170"/>
+    <path d="M150 40 L330 190"/>
+  </svg>
+  <svg class="deco l" width="430" height="430" viewBox="0 0 100 100" opacity=".55"><use href="#mark"/></svg>
+  <svg class="deco r" width="380" height="380" viewBox="0 0 100 100" opacity=".32"><use href="#mark"/></svg>
+  <div class="lock">
+    <svg width="170" height="170" viewBox="0 0 100 100"><use href="#mark"/></svg>
+    <span class="word">Tessera</span>
+  </div>
+</div>
+
+<!-- AVATAR -->
+<span class="caption">#avatar — 400x400</span>
+<div class="art avatar" id="avatar">
+  <span class="ring"></span>
+  <svg width="250" height="250" viewBox="0 0 100 100" style="position:relative;z-index:3"><use href="#mark"/></svg>
+</div>
+
+<!-- AVATAR, no ring -->
+<span class="caption">#avatar-plain — 400x400</span>
+<div class="art avatar" id="avatar-plain">
+  <svg width="270" height="270" viewBox="0 0 100 100" style="position:relative;z-index:3"><use href="#mark"/></svg>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Tessera is a tokenized indie game studio. Hold $tessera on Robinhood Chain to playtest, review, and play every release.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080b">
+<meta property="og:title" content="Tessera">
+<meta property="og:description" content="Tessera is a tokenized indie game studio. Hold $tessera on Robinhood Chain to playtest, review, and play every release.">
+<meta name="twitter:card" content="summary">
+<title>Tessera</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+/* Tessera commits to one visual world: black ground, monochrome type, colour
+   reserved for state (live, rating, warning). Every colour is explicit, so the
+   page holds on either host ground. */
+:root {
+  --paper:#08080b; --surface:#101015; --surface-2:#16161c; --raise:#1c1c23;
+  --ink:#f5f5f7; --ink-2:#9b9ba6; --ink-3:#66666f;
+  --line:#22222b; --line-2:#1a1a21;
+  --accent:#ffffff; --accent-ink:#08080b;
+  --live:#4ade80; --star:#f0b429; --warn:#ff9f6b;
+  --tile:#1a1a21; --tile-on:#f5f5f7;
+
+  --display:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --body:"Instrument Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --rail:1120px;
+}
+*, *::before, *::after { box-sizing:border-box; }
+body {
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--body); font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3 { font-family:var(--display); margin:0; text-wrap:balance; letter-spacing:-0.025em; line-height:1.07; }
+p { margin:0; }
+a { color:inherit; }
+:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:3px; }
+.container { width:100%; max-width:var(--rail); margin-inline:auto; padding-inline:20px; }
+[hidden] { display:none !important; }
+
+/* ---- header ------------------------------------------------------------ */
+.site-header {
+  position:sticky; top:env(safe-area-inset-top, 0px); z-index:50;
+  background:rgba(8,8,11,.82); backdrop-filter:saturate(160%) blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner { display:flex; align-items:center; gap:20px; min-height:66px; }
+.logo { display:inline-flex; align-items:center; gap:11px; color:var(--ink); text-decoration:none; }
+.logo-word { font-family:var(--display); font-weight:700; font-size:17px; letter-spacing:-0.022em; }
+.nav { display:flex; align-items:center; gap:4px; margin-left:auto; }
+.nav a {
+  font-size:14.5px; font-weight:500; color:var(--ink-2); text-decoration:none;
+  padding:7px 12px; border-radius:8px; transition:color .15s ease, background .15s ease;
+}
+.nav a:hover { color:var(--ink); background:var(--surface); }
+.nav a[aria-current="page"] { color:var(--ink); background:var(--raise); }
+
+/* ---- buttons ----------------------------------------------------------- */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font-family:var(--body); font-size:15px; font-weight:600; line-height:1;
+  padding:12px 20px; border-radius:10px; border:1px solid transparent;
+  text-decoration:none; cursor:pointer; white-space:nowrap;
+  transition:transform .12s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
+}
+.btn:active { transform:translateY(1px); }
+.btn-primary { background:var(--accent); color:var(--accent-ink); }
+.btn-primary:hover { background:#e4e4e8; }
+.btn-ghost { background:transparent; color:var(--ink); border-color:var(--line); }
+.btn-ghost:hover { border-color:var(--ink-3); background:var(--surface); }
+.btn-sm { padding:9px 15px; font-size:14px; border-radius:9px; }
+.btn[disabled] { opacity:.45; cursor:default; transform:none; }
+
+/* ---- shared -------------------------------------------------------------*/
+.eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom:12px; }
+.muted { color:var(--ink-2); }
+.small { font-size:13.5px; }
+.view { padding-block:clamp(40px, 6vw, 72px); }
+.view h2 { font-size:clamp(1.7rem, 3.3vw, 2.4rem); font-weight:700; margin-bottom:12px; }
+.view-lede { color:var(--ink-2); max-width:56ch; margin-bottom:34px; }
+.pill {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--mono); font-size:12px; letter-spacing:.06em;
+  color:var(--ink-2); background:var(--surface); border:1px solid var(--line);
+  padding:7px 13px 7px 11px; border-radius:100px;
+}
+.dot { width:7px; height:7px; border-radius:50%; background:var(--live); box-shadow:0 0 0 3px rgba(74,222,128,.16); }
+.actions { display:flex; flex-wrap:wrap; gap:12px; }
+
+/* ---- home -------------------------------------------------------------- */
+.hero { padding-block:clamp(44px, 7vw, 88px) clamp(36px, 5vw, 64px); }
+.hero-inner { display:grid; grid-template-columns:1.08fr .92fr; gap:clamp(32px, 5vw, 64px); align-items:center; }
+.hero-copy { display:flex; flex-direction:column; align-items:flex-start; gap:22px; }
+.hero h1 { font-size:clamp(2.25rem, 5.4vw, 3.8rem); font-weight:700; }
+.lead { font-size:clamp(1.02rem, 1.5vw, 1.16rem); color:var(--ink-2); max-width:34em; }
+.board {
+  display:grid; grid-template-columns:repeat(5, 1fr); gap:clamp(7px, 1.1vw, 11px);
+  aspect-ratio:1; width:100%; padding:clamp(14px, 2vw, 22px);
+  border-radius:20px; background:var(--surface); border:1px solid var(--line);
+}
+.tile { border-radius:7px; background:var(--tile); transition:background .55s ease; }
+.tile-on { background:var(--tile-on); }
+
+.section { padding-block:clamp(40px, 6vw, 76px); border-top:1px solid var(--line); }
+.section h2 { font-size:clamp(1.7rem, 3.3vw, 2.4rem); font-weight:700; margin-bottom:32px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; }
+.card {
+  display:flex; flex-direction:column; align-items:flex-start; gap:10px;
+  background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:26px 24px 28px;
+}
+.card-index { font-family:var(--mono); font-size:12px; letter-spacing:.1em; color:var(--ink-3); font-variant-numeric:tabular-nums; margin-bottom:6px; }
+.card h3 { font-size:1.12rem; font-weight:600; letter-spacing:-0.015em; }
+.card p { font-size:15px; }
+
+/* ---- token ------------------------------------------------------------- */
+.token { display:grid; grid-template-columns:1fr .82fr; gap:clamp(34px, 5vw, 64px); align-items:start; }
+.token h2 { font-family:var(--mono); font-weight:500; letter-spacing:-0.01em; }
+.facts { display:grid; grid-template-columns:repeat(4, 1fr); gap:1px; margin:30px 0 0; padding:0; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+.facts > div { background:var(--surface); padding:16px 18px; }
+.facts dt { font-family:var(--mono); font-size:11px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px; }
+.facts dd { margin:0; font-size:15px; font-weight:500; }
+.steps { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
+.steps li { display:flex; gap:16px; align-items:flex-start; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:20px 22px; }
+.step-num { flex:none; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; background:var(--raise); color:var(--ink); font-family:var(--mono); font-size:13px; }
+.steps h3 { font-size:1.03rem; font-weight:600; margin-bottom:4px; letter-spacing:-0.012em; }
+.steps p { font-size:14.5px; }
+
+/* ---- gate + builds ----------------------------------------------------- */
+.gate {
+  display:flex; flex-direction:column; align-items:flex-start; gap:16px;
+  background:var(--surface); border:1px solid var(--line); border-radius:18px;
+  padding:28px 26px; margin-bottom:28px;
+}
+.gate h3 { font-size:1.18rem; font-weight:600; }
+.gate-state { display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:12.5px; color:var(--ink-2); }
+.lock { width:8px; height:8px; border-radius:50%; background:var(--ink-3); flex:none; }
+.lock.open { background:var(--live); box-shadow:0 0 0 3px rgba(74,222,128,.16); }
+.lock.warn { background:var(--warn); box-shadow:0 0 0 3px rgba(255,159,107,.16); }
+.bal { font-family:var(--mono); font-size:13px; color:var(--ink); font-variant-numeric:tabular-nums; }
+
+.builds { display:grid; gap:14px; }
+.build {
+  display:grid; grid-template-columns:1fr auto; gap:14px 20px; align-items:start;
+  background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:22px 24px;
+}
+.build-head { display:flex; align-items:center; gap:11px; flex-wrap:wrap; }
+.build h3 { font-size:1.08rem; font-weight:600; }
+.tag {
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-2); border:1px solid var(--line); border-radius:100px; padding:3px 9px;
+}
+.tag.alpha { color:var(--warn); border-color:rgba(255,159,107,.35); }
+.tag.beta { color:var(--live); border-color:rgba(74,222,128,.3); }
+.build p { font-size:14.5px; margin-top:7px; max-width:60ch; }
+.build-meta { font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin-top:10px; letter-spacing:.04em; }
+.build-act { display:flex; flex-direction:column; gap:8px; align-items:stretch; }
+.sample-note { font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin-bottom:16px; letter-spacing:.04em; }
+
+/* ---- reviews ----------------------------------------------------------- */
+.rev { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:22px 24px; }
+.rev + .rev { margin-top:14px; }
+.rev-head { display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.rev-head h3 { font-size:1.06rem; font-weight:600; }
+.score { font-family:var(--mono); font-size:13px; color:var(--ink-2); font-variant-numeric:tabular-nums; }
+.score b { color:var(--ink); font-weight:500; }
+.stars { display:flex; gap:3px; margin:14px 0 10px; }
+.star {
+  width:30px; height:30px; display:grid; place-items:center; cursor:pointer;
+  background:transparent; border:0; padding:0; color:var(--ink-3);
+  transition:color .12s ease, transform .12s ease;
+}
+.star:hover { transform:scale(1.12); }
+.star.on { color:var(--star); }
+.star[disabled] { cursor:default; }
+.star[disabled]:hover { transform:none; }
+.rev textarea {
+  width:100%; min-height:62px; resize:vertical; margin-top:4px;
+  background:var(--surface-2); color:var(--ink); border:1px solid var(--line);
+  border-radius:10px; padding:11px 13px; font-family:var(--body); font-size:14.5px;
+}
+.rev textarea:focus { outline:2px solid var(--accent); outline-offset:1px; }
+.rev-foot { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:12px; }
+.rev-status { font-family:var(--mono); font-size:11.5px; color:var(--ink-3); }
+.others { margin-top:18px; border-top:1px solid var(--line-2); padding-top:14px; display:grid; gap:12px; }
+.other { display:flex; gap:11px; align-items:flex-start; }
+.avatar { width:26px; height:26px; border-radius:50%; flex:none; background:var(--raise); }
+.other-body { min-width:0; }
+.other-name { font-size:13.5px; font-weight:600; }
+.other-stars { font-family:var(--mono); font-size:11.5px; color:var(--star); letter-spacing:.08em; }
+.other p { font-size:14px; color:var(--ink-2); margin-top:3px; overflow-wrap:anywhere; }
+
+.notice {
+  font-family:var(--mono); font-size:12.5px; color:var(--ink-2);
+  background:var(--surface-2); border:1px solid var(--line);
+  border-radius:10px; padding:11px 14px; margin-bottom:22px;
+}
+.notice.warn { color:var(--ink); border-color:rgba(255,159,107,.35); }
+.wallet-note { margin-top:14px; max-width:48ch; }
+
+/* ---- footer ------------------------------------------------------------ */
+.site-footer { border-top:1px solid var(--line); padding-block:44px 52px; }
+.footer-inner { display:grid; grid-template-columns:1.25fr .75fr; gap:36px; align-items:start; }
+.footer-note { margin-top:16px; max-width:46ch; }
+.footer-links { display:flex; flex-direction:column; gap:11px; }
+.footer-links a { font-size:14.5px; color:var(--ink-2); text-decoration:none; width:fit-content; }
+.footer-links a:hover { color:var(--ink); }
+
+/* ---- responsive -------------------------------------------------------- */
+@media (max-width: 920px) {
+  .hero-inner, .token, .footer-inner { grid-template-columns:1fr; }
+  .board { max-width:400px; order:-1; }
+  .grid-3 { grid-template-columns:1fr; }
+  .build { grid-template-columns:1fr; }
+  .build-act { flex-direction:row; flex-wrap:wrap; }
+}
+@media (max-width: 740px) {
+  .nav a { padding:7px 9px; font-size:14px; }
+  .logo-word { display:none; }
+  .header-inner { gap:10px; }
+}
+@media (max-width: 560px) {
+  .facts { grid-template-columns:repeat(2, 1fr); }
+  /* Logo and Connect hold the first row; the tabs take a row of their own
+     rather than squeezing the button off the side of the screen. */
+  .header-inner { flex-wrap:wrap; min-height:0; padding-block:10px; row-gap:2px; }
+  .logo-word { display:inline; }
+  .nav { order:3; width:100%; margin-left:0; justify-content:space-between; gap:0; }
+  .nav a { padding:7px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation:none !important; transition:none !important; }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="#/" aria-label="Tessera home">
+      <!-- A tessera lifted clear of its socket: the piece about to go into the
+           mosaic. Drawn as an isometric prism so it reads at 16px. -->
+      <svg width="27" height="27" viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M50 4 L78 20 L50 36 L22 20 Z" fill="currentColor"/>
+        <path d="M20 55 L50 72 L50 90 L20 73 Z" fill="currentColor" opacity=".42"/>
+        <path d="M80 55 L50 72 L50 90 L80 73 Z" fill="currentColor" opacity=".24"/>
+        <path d="M50 38 L80 55 L50 72 L20 55 Z" fill="currentColor" opacity=".62"/>
+        <path d="M50 46 L68 56 L50 66 L32 56 Z" fill="var(--paper)"/>
+      </svg>
+      <span class="logo-word">Tessera</span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#/token" data-route="token">Token</a>
+      <a href="#/playtest" data-route="playtest">Playtest</a>
+      <a href="#/reviews" data-route="reviews">Reviews</a>
+      <a href="https://x.com/Trytessera" target="_blank" rel="noreferrer">X</a>
+    </nav>
+    <button class="btn btn-primary btn-sm" id="connect" type="button">Connect</button>
+  </div>
+</header>
+
+<main>
+  <!-- ---- home --------------------------------------------------------- -->
+  <div id="view-home">
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <span class="pill"><span class="dot"></span>Live on Robinhood Chain</span>
+          <h1>Indie games, shaped by the people who hold them.</h1>
+          <p class="lead">Tessera is a tokenized indie game studio. Hold $tessera to get into playtests, review every build, and play each release free.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#/playtest">Enter playtest</a>
+            <a class="btn btn-ghost" href="#/token">Get $tessera</a>
+          </div>
+          <p class="notice wallet-note" id="wallet-note" hidden></p>
+        </div>
+        <div class="board" id="board" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="eyebrow">What holders get</p>
+        <h2>Hold $tessera. Get a seat in the studio.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <span class="card-index">01</span>
+            <h3>Playtest access</h3>
+            <p class="muted">Holders get into the playtest area and play builds while they are still being made.</p>
+          </div>
+          <div class="card">
+            <span class="card-index">02</span>
+            <h3>Reviews that matter</h3>
+            <p class="muted">Rate each build and leave feedback. Holder reviews decide what gets fixed and built next.</p>
+          </div>
+          <div class="card">
+            <span class="card-index">03</span>
+            <h3>Every game, free</h3>
+            <p class="muted">When a game ships, holders play it free. One bag, the whole catalogue.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ---- token -------------------------------------------------------- -->
+  <div id="view-token" hidden>
+    <section class="view">
+      <div class="container token">
+        <div>
+          <p class="eyebrow">The token</p>
+          <h2>$tessera</h2>
+          <p class="muted">$tessera is the access pass to everything Tessera makes. It is a fixed-supply token live on Robinhood Chain, launched through PONS Launchpad. Hold at least 5,000,000 to unlock the playtest area.</p>
+
+
+          <dl class="facts">
+            <div><dt>Network</dt><dd>Robinhood Chain</dd></div>
+            <div><dt>Chain ID</dt><dd>4663</dd></div>
+            <div><dt>Launchpad</dt><dd>PONS</dd></div>
+            <div><dt>Gas</dt><dd>ETH</dd></div>
+          </dl>
+        </div>
+
+        <ol class="steps">
+          <li><span class="step-num">1</span><div><h3>Get a wallet</h3><p class="muted">Any EVM wallet works. Add Robinhood Chain and bridge a little ETH for gas.</p></div></li>
+          <li><span class="step-num">2</span><div><h3>Pick up $tessera</h3><p class="muted">Find $tessera on PONS Launchpad and pick up what you need.</p></div></li>
+          <li><span class="step-num">3</span><div><h3>Connect and verify</h3><p class="muted">Connect on the playtest page. The page reads your balance; it never asks for a signature or a transaction.</p></div></li>
+        </ol>
+      </div>
+    </section>
+  </div>
+
+  <!-- ---- playtest ------------------------------------------------------ -->
+  <div id="view-playtest" hidden>
+    <section class="view">
+      <div class="container">
+        <p class="eyebrow">Playtest</p>
+        <h2>Builds in progress</h2>
+        <p class="view-lede">Holders play what is being made, while it is being made. Connect a wallet on Robinhood Chain and the page reads your $tessera balance to unlock the builds.</p>
+
+        <div class="gate">
+          <div class="gate-state"><span class="lock" id="gate-lock"></span><span id="gate-line">Not connected</span></div>
+          <h3 id="gate-title">Hold 5,000,000 $tessera to unlock</h3>
+          <p class="muted small" id="gate-body">Connect a wallet and the page will check your balance on chain. It reads the balance only — no signature, no transaction, no approvals.</p>
+          <p class="bal" id="gate-bal" hidden></p>
+          <div class="actions">
+            <button class="btn btn-primary" id="gate-connect" type="button">Connect wallet</button>
+            <button class="btn btn-ghost" id="gate-switch" type="button" hidden>Switch to Robinhood Chain</button>
+            <a class="btn btn-ghost" href="#/token">Get $tessera</a>
+          </div>
+        </div>
+
+        <p class="sample-note">Sample catalogue — swap these for your real builds.</p>
+        <div class="builds" id="builds"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ---- reviews ------------------------------------------------------- -->
+  <div id="view-reviews" hidden>
+    <section class="view">
+      <div class="container">
+        <p class="eyebrow">Reviews</p>
+        <h2>Rate the builds</h2>
+        <p class="view-lede">Every holder review is counted. Scores and notes here are what the studio works from when deciding what gets fixed next.</p>
+        <p class="notice" id="rev-mode">Loading reviews&hellip;</p>
+        <div id="reviews"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <a class="logo" href="#/">
+        <svg width="27" height="27" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M50 4 L78 20 L50 36 L22 20 Z" fill="currentColor"/>
+          <path d="M20 55 L50 72 L50 90 L20 73 Z" fill="currentColor" opacity=".42"/>
+          <path d="M80 55 L50 72 L50 90 L80 73 Z" fill="currentColor" opacity=".24"/>
+          <path d="M50 38 L80 55 L50 72 L20 55 Z" fill="currentColor" opacity=".62"/>
+          <path d="M50 46 L68 56 L50 66 L32 56 Z" fill="var(--paper)"/>
+        </svg>
+        <span class="logo-word">Tessera</span>
+      </a>
+      <p class="muted small footer-note">$tessera is a community access token for Tessera games. It is not an investment product and nothing on this site is financial advice.</p>
+    </div>
+    <div class="footer-links">
+      <a href="#/playtest">Playtest</a>
+      <a href="#/reviews">Reviews</a>
+      <a href="#/token">Token</a>
+      <a href="https://x.com/Trytessera" target="_blank" rel="noreferrer">X (Twitter)</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var CA = '0xB9195597f91f179EBB05D3F1765B35C3d8491aCb';
+  var CHAIN_ID = 4663, CHAIN_HEX = '0x1237';
+  var THRESHOLD = 5000000;
+  var $ = function (s) { return document.querySelector(s); };
+
+  var BUILDS = [
+    { id: 'b1', name: 'Lantern Run',   stage: 'alpha', version: '0.4.2', note: 'A one-button climb through a collapsing tower. This build adds the grapple and reworks how falls are scored.', updated: 'Updated 3 days ago' },
+    { id: 'b2', name: 'Paper Kingdom', stage: 'beta',  version: '0.9.0', note: 'Turn-based skirmishes on a folding board. Feature complete; the last pass is balance on the late-game decks.', updated: 'Updated 9 days ago' },
+    { id: 'b3', name: 'Salt Harbour',  stage: 'alpha', version: '0.2.7', note: 'A quiet trading sim on a dying coast. Early: the economy runs, the story beats are placeholder.', updated: 'Updated 2 weeks ago' }
+  ];
+
+  /* ---- router ---------------------------------------------------------
+     Each tab is a real view with its own URL, so a tab can be linked,
+     bookmarked, and reached with the back button. */
+  var VIEWS = ['home', 'token', 'playtest', 'reviews'];
+
+  function route() {
+    var name = (location.hash || '#/').replace(/^#\/?/, '').split('/')[0] || 'home';
+    if (VIEWS.indexOf(name) === -1) name = 'home';
+    VIEWS.forEach(function (v) { $('#view-' + v).hidden = v !== name; });
+    Array.prototype.forEach.call(document.querySelectorAll('#nav a[data-route]'), function (a) {
+      if (a.dataset.route === name) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    if (name === 'reviews') renderReviews();
+    if (name === 'playtest') renderBuilds();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+  window.addEventListener('hashchange', route);
+
+  /* ---- the board ------------------------------------------------------- */
+  var LIT = [1, 4, 5, 7, 11, 12, 14, 17, 18, 20, 23];
+  var board = $('#board'), tiles = [];
+  for (var i = 0; i < 25; i++) {
+    var t = document.createElement('span');
+    t.className = 'tile' + (LIT.indexOf(i) > -1 ? ' tile-on' : '');
+    board.appendChild(t); tiles.push(t);
+  }
+  if (!REDUCED.matches) {
+    setInterval(function () {
+      var on = tiles.filter(function (x) { return x.classList.contains('tile-on'); });
+      var off = tiles.filter(function (x) { return !x.classList.contains('tile-on'); });
+      if (!on.length || !off.length) return;
+      on[Math.floor(Math.random() * on.length)].classList.remove('tile-on');
+      off[Math.floor(Math.random() * off.length)].classList.add('tile-on');
+    }, 1500);
+  }
+
+  /* ---- wallet ---------------------------------------------------------
+     Read-only. eth_requestAccounts for the address, eth_call for the
+     balance. Nothing here signs or spends. */
+  var connectBtn = $('#connect'), note = $('#wallet-note');
+  var gateConnect = $('#gate-connect'), gateSwitch = $('#gate-switch');
+  var providers = [];
+  var W = { address: null, chain: null, balance: null, decimals: 18, unlocked: false };
+
+  window.addEventListener('eip6963:announceProvider', function (e) {
+    if (e.detail && e.detail.provider && providers.indexOf(e.detail) === -1) providers.push(e.detail);
+  });
+  try { window.dispatchEvent(new Event('eip6963:requestProvider')); } catch (e) { /* older browser */ }
+  function provider() { return providers.length ? providers[0].provider : (window.ethereum || null); }
+
+  function say(text, warn) {
+    note.textContent = text || '';
+    note.className = 'notice wallet-note' + (warn ? ' warn' : '');
+    note.hidden = !text;
+  }
+  var trim = function (a) { return a.slice(0, 6) + '…' + a.slice(-4); };
+  var fmt = function (n) { return n.toLocaleString('en-US', { maximumFractionDigits: 0 }); };
+
+  function pad32(hex) { return '000000000000000000000000' + hex.replace(/^0x/, '').toLowerCase(); }
+
+  function readBalance(p, addr) {
+    return p.request({ method: 'eth_call', params: [{ to: CA, data: '0x313ce567' }, 'latest'] })
+      .then(function (d) {
+        W.decimals = (d && d !== '0x') ? parseInt(d, 16) : 18;
+        if (!isFinite(W.decimals) || W.decimals < 0 || W.decimals > 36) W.decimals = 18;
+      })
+      .catch(function () { W.decimals = 18; })
+      .then(function () {
+        return p.request({ method: 'eth_call', params: [{ to: CA, data: '0x70a08231' + pad32(addr) }, 'latest'] });
+      })
+      .then(function (d) {
+        if (!d || d === '0x') { W.balance = null; return; }
+        var raw = BigInt(d);
+        var unit = BigInt(10) ** BigInt(W.decimals);
+        W.balance = Number(raw / unit);
+        W.unlocked = raw >= BigInt(THRESHOLD) * unit;
+      });
+  }
+
+  function paintGate() {
+    var lock = $('#gate-lock'), line = $('#gate-line'), title = $('#gate-title');
+    var body = $('#gate-body'), bal = $('#gate-bal');
+    gateSwitch.hidden = true;
+    gateConnect.hidden = false;
+    bal.hidden = true;
+
+    if (!W.address) {
+      lock.className = 'lock'; line.textContent = 'Not connected';
+      title.textContent = 'Hold 5,000,000 $tessera to unlock';
+      body.textContent = 'Connect a wallet and the page will check your balance on chain. It reads the balance only — no signature, no transaction, no approvals.';
+      gateConnect.textContent = 'Connect wallet';
+    } else if (W.chain !== CHAIN_ID) {
+      lock.className = 'lock warn'; line.textContent = trim(W.address) + ' · chain ' + W.chain;
+      title.textContent = 'Wrong network';
+      body.textContent = '$tessera lives on Robinhood Chain (chain ID 4663). Switch networks and the balance check will run.';
+      gateConnect.hidden = true; gateSwitch.hidden = false;
+    } else if (W.balance === null) {
+      lock.className = 'lock warn'; line.textContent = trim(W.address);
+      title.textContent = 'Balance unavailable';
+      body.textContent = 'The contract did not answer the balance call from this wallet. Try again, or check the address on the explorer.';
+      gateConnect.textContent = 'Retry';
+    } else if (W.unlocked) {
+      lock.className = 'lock open'; line.textContent = trim(W.address) + ' · Robinhood Chain';
+      title.textContent = 'Playtest unlocked';
+      body.textContent = 'You hold enough $tessera. Every build below is open to you.';
+      bal.hidden = false; bal.textContent = fmt(W.balance) + ' $tessera held';
+      gateConnect.textContent = 'Refresh balance';
+    } else {
+      lock.className = 'lock'; line.textContent = trim(W.address) + ' · Robinhood Chain';
+      title.textContent = 'Short of the threshold';
+      body.textContent = 'You need 5,000,000 $tessera to open the playtest area.';
+      bal.hidden = false;
+      bal.textContent = fmt(W.balance) + ' held · ' + fmt(Math.max(0, THRESHOLD - W.balance)) + ' short';
+      gateConnect.textContent = 'Refresh balance';
+    }
+    renderBuilds();
+  }
+
+  function afterConnect(p) {
+    return p.request({ method: 'eth_chainId' })
+      .then(function (id) { W.chain = parseInt(id, 16); })
+      .catch(function () { W.chain = null; })
+      .then(function () {
+        if (W.chain !== CHAIN_ID) return;
+        return readBalance(p, W.address);
+      })
+      .then(function () {
+        connectBtn.textContent = trim(W.address);
+        paintGate();
+      });
+  }
+
+  function wire(p) {
+    if (!p || !p.on) return;
+    p.on('accountsChanged', function (a) {
+      if (!a || !a.length) { W.address = null; W.balance = null; W.unlocked = false; connectBtn.textContent = 'Connect'; paintGate(); }
+      else { W.address = a[0]; afterConnect(p); }
+    });
+    p.on('chainChanged', function () {
+      if (W.address) afterConnect(p);
+    });
+  }
+
+  function connect() {
+    var p = provider();
+    if (!p) {
+      say('No EVM wallet found in this browser. Install one, add Robinhood Chain (chain ID 4663), then come back.', true);
+      location.hash = '#/playtest';
+      return;
+    }
+    connectBtn.disabled = true; gateConnect.disabled = true;
+    p.request({ method: 'eth_requestAccounts' }).then(function (a) {
+      if (!a || !a.length) throw new Error('no account');
+      W.address = a[0];
+      wire(p);
+      say('');
+      return afterConnect(p);
+    }).catch(function (err) {
+      say(err && err.code === 4001 ? 'Connection request rejected in the wallet.' : 'Could not connect to the wallet.', true);
+    }).then(function () { connectBtn.disabled = false; gateConnect.disabled = false; });
+  }
+
+  connectBtn.addEventListener('click', function () {
+    if (!W.address) return connect();
+    W.address = null; W.balance = null; W.unlocked = false;
+    connectBtn.textContent = 'Connect';
+    say('Disconnected from this page. Your wallet may still list this site among its connected sites.');
+    paintGate();
+  });
+  gateConnect.addEventListener('click', function () {
+    if (W.address) { var p = provider(); if (p) afterConnect(p); return; }
+    connect();
+  });
+  gateSwitch.addEventListener('click', function () {
+    var p = provider(); if (!p) return;
+    p.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: CHAIN_HEX }] })
+      .then(function () { return afterConnect(p); })
+      .catch(function () { say('The wallet did not switch networks. Add Robinhood Chain (4663) manually and try again.', true); });
+  });
+
+  /* restore a previously authorised address without prompting */
+  var p0 = provider();
+  if (p0 && p0.request) {
+    p0.request({ method: 'eth_accounts' }).then(function (a) {
+      if (a && a.length) { W.address = a[0]; wire(p0); return afterConnect(p0); }
+    }).catch(function () { /* not authorised yet */ });
+  }
+
+  /* ---- builds ---------------------------------------------------------- */
+  function renderBuilds() {
+    var host = $('#builds');
+    host.innerHTML = '';
+    BUILDS.forEach(function (b) {
+      var el = document.createElement('article');
+      el.className = 'build';
+      var left = document.createElement('div');
+      var head = document.createElement('div');
+      head.className = 'build-head';
+      var h = document.createElement('h3'); h.textContent = b.name;
+      var tag = document.createElement('span'); tag.className = 'tag ' + b.stage; tag.textContent = b.stage;
+      var ver = document.createElement('span'); ver.className = 'tag'; ver.textContent = 'v' + b.version;
+      head.appendChild(h); head.appendChild(tag); head.appendChild(ver);
+      var p = document.createElement('p'); p.className = 'muted'; p.textContent = b.note;
+      var meta = document.createElement('div'); meta.className = 'build-meta'; meta.textContent = b.updated;
+      left.appendChild(head); left.appendChild(p); left.appendChild(meta);
+
+      var act = document.createElement('div'); act.className = 'build-act';
+      var play = document.createElement('button');
+      play.type = 'button';
+      play.className = 'btn ' + (W.unlocked ? 'btn-primary' : 'btn-ghost') + ' btn-sm';
+      play.textContent = W.unlocked ? 'Launch build' : 'Locked';
+      play.disabled = !W.unlocked;
+      play.addEventListener('click', function () {
+        play.textContent = 'Build not hosted yet';
+        setTimeout(function () { play.textContent = 'Launch build'; }, 2200);
+      });
+      var rate = document.createElement('a');
+      rate.className = 'btn btn-ghost btn-sm'; rate.href = '#/reviews'; rate.textContent = 'Review';
+      act.appendChild(play); act.appendChild(rate);
+
+      el.appendChild(left); el.appendChild(act);
+      host.appendChild(el);
+    });
+  }
+
+  /* ---- reviews --------------------------------------------------------
+     Shared through the artifact's own store when the page is served with
+     it; otherwise the viewer's own browser, stated plainly either way. */
+  var DB = { db: null, user: null, uid: null, rows: {}, ready: false, shared: false, canWrite: true };
+  var LOCAL_KEY = 'tessera-reviews';
+
+  function localRows() {
+    try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || '{}'); } catch (e) { return {}; }
+  }
+  function saveLocal(ratings) {
+    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(ratings)); } catch (e) { /* private mode */ }
+  }
+
+  function mine() {
+    if (DB.shared && DB.uid && DB.rows[DB.uid]) return DB.rows[DB.uid].ratings || {};
+    if (!DB.shared) return localRows();
+    return {};
+  }
+
+  function aggregate(buildId) {
+    var sum = 0, n = 0, notes = [];
+    Object.keys(DB.rows).forEach(function (uid) {
+      var r = (DB.rows[uid].ratings || {})[buildId];
+      if (!r || !r.stars) return;
+      sum += r.stars; n += 1;
+      if (r.text) notes.push({ uid: uid, stars: r.stars, text: r.text });
+    });
+    return { avg: n ? sum / n : 0, n: n, notes: notes.slice(0, 6) };
+  }
+
+  var saveTimer = 0;
+  function writeMine(ratings, statusEl) {
+    if (!DB.shared) { saveLocal(ratings); if (statusEl) statusEl.textContent = 'Saved in this browser'; return; }
+    if (!DB.uid || !DB.canWrite) { if (statusEl) statusEl.textContent = 'Read-only here'; return; }
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      if (statusEl) statusEl.textContent = 'Saving…';
+      DB.db.doc('reviews/' + DB.uid).set({ ratings: ratings, at: Date.now() }).then(function () {
+        if (statusEl) statusEl.textContent = 'Saved';
+      }).catch(function (e) {
+        DB.canWrite = false;
+        if (statusEl) statusEl.textContent = e && e.code === 'invalid_argument' ? 'Read-only here' : 'Could not save';
+      });
+    }, 500);
+  }
+
+  function renderReviews() {
+    var host = $('#reviews');
+    if (!host) return;
+    var ratings = mine();
+    var ids = [];
+    BUILDS.forEach(function (b) { aggregate(b.id).notes.forEach(function (x) { if (ids.indexOf(x.uid) === -1) ids.push(x.uid); }); });
+
+    var draw = function (names) {
+      host.innerHTML = '';
+      BUILDS.forEach(function (b) {
+        var agg = aggregate(b.id);
+        var card = document.createElement('section'); card.className = 'rev';
+
+        var head = document.createElement('div'); head.className = 'rev-head';
+        var h = document.createElement('h3'); h.textContent = b.name + ' · v' + b.version;
+        var sc = document.createElement('span'); sc.className = 'score';
+        sc.innerHTML = agg.n
+          ? '<b>' + agg.avg.toFixed(1) + '</b> / 5 · ' + agg.n + (agg.n === 1 ? ' review' : ' reviews')
+          : 'No reviews yet';
+        head.appendChild(h); head.appendChild(sc);
+        card.appendChild(head);
+
+        var stars = document.createElement('div'); stars.className = 'stars';
+        stars.setAttribute('role', 'group');
+        stars.setAttribute('aria-label', 'Your rating for ' + b.name);
+        var current = (ratings[b.id] && ratings[b.id].stars) || 0;
+        for (var s = 1; s <= 5; s++) {
+          (function (value) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'star' + (value <= current ? ' on' : '');
+            btn.setAttribute('aria-label', value + ' of 5');
+            btn.setAttribute('aria-pressed', String(value === current));
+            btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">'
+              + '<path d="M12 2.6 14.9 9l6.9.7-5.2 4.7 1.5 6.8L12 17.7 5.9 21.2l1.5-6.8L2.2 9.7 9.1 9Z"'
+              + ' fill="' + (value <= current ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+            btn.addEventListener('click', function () {
+              var r = ratings[b.id] || {};
+              r.stars = (r.stars === value) ? 0 : value;
+              ratings[b.id] = r;
+              writeMine(ratings, status);
+              renderReviews();
+            });
+            stars.appendChild(btn);
+          })(s);
+        }
+        card.appendChild(stars);
+
+        var ta = document.createElement('textarea');
+        ta.placeholder = 'What worked, what broke, what you would change.';
+        ta.value = (ratings[b.id] && ratings[b.id].text) || '';
+        ta.id = 'note-' + b.id;
+        ta.addEventListener('input', function () {
+          var r = ratings[b.id] || {};
+          r.text = ta.value.slice(0, 600);
+          ratings[b.id] = r;
+          writeMine(ratings, status);
+        });
+        card.appendChild(ta);
+
+        var foot = document.createElement('div'); foot.className = 'rev-foot';
+        var status = document.createElement('span'); status.className = 'rev-status';
+        status.textContent = current ? 'Your rating is counted' : 'Not rated yet';
+        foot.appendChild(status);
+        card.appendChild(foot);
+
+        if (agg.notes.length) {
+          var others = document.createElement('div'); others.className = 'others';
+          agg.notes.forEach(function (x) {
+            if (DB.uid && x.uid === DB.uid) return;
+            var row = document.createElement('div'); row.className = 'other';
+            var av = document.createElement('img'); av.className = 'avatar'; av.alt = '';
+            if (names && names[x.uid]) av.src = names[x.uid].avatarUrl;
+            var bodyEl = document.createElement('div'); bodyEl.className = 'other-body';
+            var nm = document.createElement('div'); nm.className = 'other-name';
+            nm.textContent = (names && names[x.uid] && names[x.uid].name) || 'Someone';
+            var st = document.createElement('div'); st.className = 'other-stars';
+            st.textContent = '★'.repeat(x.stars) + '☆'.repeat(5 - x.stars);
+            var tx = document.createElement('p'); tx.textContent = x.text;
+            bodyEl.appendChild(nm); bodyEl.appendChild(st); bodyEl.appendChild(tx);
+            row.appendChild(av); row.appendChild(bodyEl);
+            others.appendChild(row);
+          });
+          if (others.children.length) card.appendChild(others);
+        }
+
+        host.appendChild(card);
+      });
+    };
+
+    if (DB.shared && DB.user && ids.length) {
+      DB.user.profiles(ids).then(draw).catch(function () { draw(null); });
+    } else {
+      draw(null);
+    }
+  }
+
+  function setMode(text, warn) {
+    var el = $('#rev-mode');
+    el.textContent = text;
+    el.className = 'notice' + (warn ? ' warn' : '');
+  }
+
+  /* The capability namespaces resolve later than this script's first run,
+     so the page renders without them and lights the shared store up if and
+     when it arrives. */
+  if (window.claude && typeof window.claude.use === 'function') {
+    Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function (r) {
+      DB.db = r[0]; DB.user = r[1];
+      if (!DB.db) { setMode('Reviews are saved in this browser only — the shared store is not available here.'); renderReviews(); return; }
+      DB.shared = true;
+      return Promise.all([
+        DB.user ? DB.user.id() : Promise.resolve(null),
+        DB.user ? DB.user.can('data.write') : Promise.resolve(null)
+      ]).then(function (u) {
+        DB.uid = u[0];
+        DB.canWrite = u[1] !== false;
+        setMode(DB.uid
+          ? 'Reviews are shared: everyone who opens this page sees the same scores.'
+          : 'Reviews are shared, but this view has no identity, so yours cannot be saved.');
+        DB.db.collection('reviews').onSnapshot(function (snap) {
+          DB.rows = {};
+          snap.docs.forEach(function (d) { DB.rows[d.id] = d.data() || {}; });
+          renderReviews();
+        }, function () {
+          setMode('The shared store stopped responding. Reload to try again.', true);
+        });
+      });
+    }).catch(function () {
+      setMode('Reviews are saved in this browser only.');
+      renderReviews();
+    });
+  } else {
+    setMode('Reviews are saved in this browser only.');
+  }
+
+  /* ---- go -------------------------------------------------------------- */
+  renderBuilds();
+  paintGate();
+  route();
+})();
+</script>
+</body>
+</html>
